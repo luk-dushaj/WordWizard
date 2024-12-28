@@ -31,7 +31,7 @@ struct InfoView: View {
         InfoItem(
             title: "Settings",
             description:
-                "Obviously I went over what some of the options were like Case Sensitivity and game play modes but you can change those and more in settings. In settings you can also change the theme of the app and the total amount of questions in the game. Below all of that will be a Save Changes button which will save your changes for next time you open the app. I HIGHLY recommend you always press the save changes button so you don't get any unexpected functionality. Have fun!"
+                "In settings you can also change the theme of the app and the total amount of questions in the game. Below all of that will be a Save Changes button which will save your changes for next time you open the app. I HIGHLY recommend you always press the save changes button so you don't get any unexpected functionality. Have fun!"
         ),
         InfoItem(
             title: "Why the long wait for the first app open?",

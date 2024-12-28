@@ -145,7 +145,7 @@ struct GameView: View {
         errorMessage = ""
         vm.currentWord = vm.gameWords[currentQuestion - 1]
 
-        let isAnswerCorrect = vm.checkWord(userAnswer)
+        let isAnswerCorrect = vm.checkWord(userAnswer.lowercased())
 
         if currentQuestion == vm.totalQuestions {
             if isAnswerCorrect {
