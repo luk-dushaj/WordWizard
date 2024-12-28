@@ -29,11 +29,6 @@ struct InfoView: View {
                 "A mode is basically the difficulty of the words generated. The 3 main ones easy, medium and hard are very self explanatory. Easy will generate words with 5 or less letter words, medium will generate words with 8-6 letter words and hard will generate words with 9+ letters. Lastly, random is just random."
         ),
         InfoItem(
-            title: "What is Case Sensitivity?",
-            description:
-                "So how I would describe it is the spelling has to be exact. Like let's say if the word you receive is \"Adam\" obviously it is common to always have the first letter uppercased in the name. So with Case Sensitivity turned on you have to be very exact on spelling. It is off by default but you are always welcome to turn it on. IMPORTANT: When you turn it on in settings, you have to click save changes in order for it to fully take effect."
-        ),
-        InfoItem(
             title: "Settings",
             description:
                 "Obviously I went over what some of the options were like Case Sensitivity and game play modes but you can change those and more in settings. In settings you can also change the theme of the app and the total amount of questions in the game. Below all of that will be a Save Changes button which will save your changes for next time you open the app. I HIGHLY recommend you always press the save changes button so you don't get any unexpected functionality. Have fun!"

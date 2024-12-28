@@ -26,7 +26,6 @@ class ViewModel: ObservableObject {
 
     @Published var mode: Mode = .random
     @Published var totalQuestions: Int = 5
-    @Published var casesensitive: Bool = false
     @Published var gameWords: [String] = []
     @Published public var isLoading: Bool = false
 
@@ -37,20 +36,19 @@ class ViewModel: ObservableObject {
     var currentWord = ""
 
     /// Function that is for syncing the new data now and loading the new words based on that data
-    func refresh(casesensitive: Bool) async {
+    func refresh() async {
         // Set loading state to true and ensure UI reflects it immediately
         DispatchQueue.main.async {
             self.isLoading = true
         }
         await saveData()
         await loadData()
-        if casesensitive {
-            easyWords.removeAll()
-            mediumWords.removeAll()
-            hardWords.removeAll()
-            gameWords.removeAll()
-            await loadWordTypes()
-        }
+        easyWords.removeAll()
+        mediumWords.removeAll()
+        hardWords.removeAll()
+        gameWords.removeAll()
+        await loadWordTypes()
+
         await generateWords()
         DispatchQueue.main.async {
             self.isLoading = false
@@ -71,7 +69,6 @@ class ViewModel: ObservableObject {
     /// Saves the current game data to `UserDefaults`
     func saveData() async {
         defaults.set(mode.rawValue, forKey: "mode")
-        defaults.set(casesensitive, forKey: "casesensitive")
         defaults.set(totalQuestions, forKey: "totalQuestions")
         defaults.set(theme, forKey: "selectedAppearance")
     }
@@ -85,12 +82,6 @@ class ViewModel: ObservableObject {
             totalQuestions = defaults.integer(forKey: "totalQuestions")
         } else {
             totalQuestions = 5
-        }
-
-        if keys.contains("casesensitive") {
-            casesensitive = defaults.bool(forKey: "casesensitive")
-        } else {
-            casesensitive = false
         }
 
         if keys.contains("mode"),
@@ -118,89 +109,91 @@ class ViewModel: ObservableObject {
             language: "en")
         return misspelledRange.location == NSNotFound
     }
-    
+
     /// Checks if optimized word list is available
     func isFilteredListAvailable() -> URL? {
         let fileName = "filtered_words"
         let fileExtension = "txt"
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let filteredFileURL = documentsDirectory.appendingPathComponent("\(fileName).\(fileExtension)")
-        
-        return FileManager.default.fileExists(atPath: filteredFileURL.path) ? filteredFileURL : nil
+        let documentsDirectory = FileManager.default.urls(
+            for: .documentDirectory, in: .userDomainMask
+        ).first!
+        let filteredFileURL = documentsDirectory.appendingPathComponent(
+            "\(fileName).\(fileExtension)")
+
+        return FileManager.default.fileExists(atPath: filteredFileURL.path)
+            ? filteredFileURL : nil
     }
-    
+
     /// Function that grabs words from word list
     func loadWordTypes() async {
         let fileName = "words"
         let fileExtension = "txt"
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        
+        let documentsDirectory = FileManager.default.urls(
+            for: .documentDirectory, in: .userDomainMask
+        ).first!
+
         if let filteredFileURL = isFilteredListAvailable() {
             do {
                 // Use the existing filtered file
-                let content = try String(contentsOf: filteredFileURL, encoding: .utf8)
+                let content = try String(
+                    contentsOf: filteredFileURL, encoding: .utf8)
                 let lines = content.split(whereSeparator: \.isNewline)
                     .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                     .filter { !$0.isEmpty }
-                
+
                 print("Filtered words loaded:", lines.count)
-                
+
                 for word in lines {
                     if word.count <= 5 {
-                        casesensitive
-                            ? easyWords.append(word)
-                            : easyWords.append(word.lowercased())
+                        easyWords.append(word)
                     } else if word.count <= 8 && word.count >= 6 {
-                        casesensitive
-                            ? mediumWords.append(word)
-                            : mediumWords.append(word.lowercased())
+                        mediumWords.append(word)
                     } else if word.count >= 9 {
-                        casesensitive
-                            ? hardWords.append(word)
-                            : hardWords.append(word.lowercased())
+                        hardWords.append(word)
                     }
                 }
             } catch {
                 print("Error reading filtered file: \(error)")
             }
         } else {
-            if let filePath = Bundle.main.path(forResource: fileName, ofType: fileExtension) {
+            if let filePath = Bundle.main.path(
+                forResource: fileName, ofType: fileExtension)
+            {
                 do {
-                    let content = try String(contentsOfFile: filePath, encoding: .utf8)
-                    
+                    let content = try String(
+                        contentsOfFile: filePath, encoding: .utf8)
+
                     let lines = content.split(whereSeparator: \.isNewline)
-                        .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                        .map {
+                            $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                        }
                         .filter { !$0.isEmpty }
-                    
+
                     var correctWordList: [String] = []
-                    
+
                     for baseWord in lines {
                         let word = String(baseWord)
                         if isCorrect(word: word) {
                             correctWordList.append(word)
-                            
+
                             if word.count <= 5 {
-                                casesensitive
-                                    ? easyWords.append(word)
-                                    : easyWords.append(word.lowercased())
+                                easyWords.append(word)
                             } else if word.count <= 8 && word.count >= 6 {
-                                casesensitive
-                                    ? mediumWords.append(word)
-                                    : mediumWords.append(word.lowercased())
+                                mediumWords.append(word)
                             } else if word.count >= 9 {
-                                casesensitive
-                                    ? hardWords.append(word)
-                                    : hardWords.append(word.lowercased())
+                                hardWords.append(word)
                             }
                         }
                     }
-                    
-                    
+
                     let updatedContent = correctWordList.joined(separator: "\n")
-                    let filteredFileURL = documentsDirectory.appendingPathComponent("filtered_words.txt")
-                    
-                    try updatedContent.write(to: filteredFileURL, atomically: true, encoding: .utf8)
-                    
+                    let filteredFileURL =
+                        documentsDirectory.appendingPathComponent(
+                            "filtered_words.txt")
+
+                    try updatedContent.write(
+                        to: filteredFileURL, atomically: true, encoding: .utf8)
+
                     print("Filtered words saved to \(filteredFileURL.path)")
                 } catch {
                     print("Error reading or writing file: \(error)")
@@ -293,7 +286,6 @@ class ViewModel: ObservableObject {
 
     /// Checks if the word exists in the game words
     func checkWord(_ word: String) -> Bool {
-        gameWords.contains(casesensitive ? word : word.lowercased())
+        gameWords.contains(word)
     }
 }
-

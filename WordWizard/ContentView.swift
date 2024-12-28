@@ -25,9 +25,9 @@ struct ContentView: View {
                 } else {
                     GameView(isGameActive: $isGameActive)
                         .onAppear {
+                            vm.gameWords.removeAll()
                             Task {
                                 // Ensuring game words are refreshed
-                                vm.gameWords.removeAll()
                                 await vm.generateWords()
                             }
                         }
