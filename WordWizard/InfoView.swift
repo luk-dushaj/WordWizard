@@ -75,7 +75,7 @@ struct InfoView: View {
             }
             .sheet(isPresented: $showSource) {
                 WebView(
-                    url: URL(string: "https://github.com/dwyl/english-words")!)
+                    url: URL(string: "https://github.com/luk-dushaj/WordWizard")!)
             }
             .frame(
                 minWidth: 0, maxWidth: .infinity, minHeight: 0,
