@@ -141,8 +141,6 @@ class ViewModel: ObservableObject {
                     .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                     .filter { !$0.isEmpty }
 
-                print("Filtered words loaded:", lines.count)
-
                 for word in lines {
                     if word.count <= 5 {
                         easyWords.append(word)

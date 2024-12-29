@@ -135,7 +135,6 @@ struct GameView: View {
         }
     }
     func errorHandling() {
-        print(vm.gameWords)
         // Validate user input
         if userAnswer.isEmpty || !userAnswer.contains(where: { $0.isLetter }) {
             errorMessage = "Please enter a valid word."
