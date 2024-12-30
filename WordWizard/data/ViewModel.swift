@@ -2,7 +2,7 @@
 //  ViewModel.swift
 //  WordWizard
 //
-//  Created by user on 12/22/24.
+//  Created by Luk Dushaj on 12/22/24.
 //
 
 import Foundation

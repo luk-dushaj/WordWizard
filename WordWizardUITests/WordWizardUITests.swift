@@ -2,7 +2,7 @@
 //  WordWizardUITests.swift
 //  WordWizardUITests
 //
-//  Created by user on 12/21/24.
+//  Created by Luk Dushaj on 12/21/24.
 //
 
 import XCTest
